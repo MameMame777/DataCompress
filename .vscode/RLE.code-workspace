@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../../../Desktop/CompressSRC/Sample"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.dpf": "yaml",
+			"*.tcc": "cpp",
+			"deque": "cpp",
+			"string": "cpp",
+			"vector": "cpp",
+			"fstream": "cpp"
+		}
+	}
+}

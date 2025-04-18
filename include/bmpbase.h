@@ -13,7 +13,7 @@ struct Color {
 class BmpBase {
 public:
     // Constructor and Destructor
-    BmpBase(); // デフォルトコンストラクタ
+    BmpBase(); // default constructor
     BmpBase(int width, int height, int bitDepth = 24);
     ~BmpBase();
 

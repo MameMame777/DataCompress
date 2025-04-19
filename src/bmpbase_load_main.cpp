@@ -3,8 +3,9 @@
 
 int main() {
   // Load a BMP file
-  const std::string filename = "Mandrill"; // Replace with your BMP file path
-  const std::string filepath = filename+".bmp"; // Replace with your BMP file path
+  const std::string picturepath  = "../picture/"; // Replace with your BMP file path
+  const std::string filename     = "Earth";       // Replace with your BMP file path
+  const std::string filepath     = picturepath+filename+".bmp"; // Replace with your BMP file path
 
   // output bmp file name corresiponding to the input bmp file name
   const std::string outfilepath = filename + "_out.bmp";

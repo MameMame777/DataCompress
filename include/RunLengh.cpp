@@ -46,7 +46,9 @@ void processImage(const std::string& inputFilePath, const std::string& compresse
       decompressedImage.setPixelData(decompressedData);
       decompressedImage.saveBMP(decompressedFilePath);
       std::cout << "Decompressed image saved to: " << decompressedFilePath << std::endl;
-
+      //show compression file size ratio ((compreeed size - decompressed size)/ compressed size)*100
+      double compressionRatio = (static_cast<double>(compressedData.size() - decompressedData.size()) / compressedData.size()) * 100;
+      std::cout << "Compression ratio: " << compressionRatio << "%" << std::endl;
   } catch (const std::exception& e) {
       std::cerr << "Error: " << e.what() << std::endl;
   }

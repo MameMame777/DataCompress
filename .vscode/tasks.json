@@ -8,7 +8,7 @@
         "-fdiagnostics-color=always",
         "-g",
         "${file}",// add active file
-        "${workspaceFolder}/include/bmpbase.cpp", // bmpbase.cpp を追加
+        "${workspaceFolder}/include/*.cpp",
         //include path
         "-I",
         "${workspaceFolder}/include",

@@ -23,7 +23,7 @@ bool BmpBase::saveBMP(const std::string& filePath) const {
   std::cout << "biWidth: " << infoHeader.biWidth << ", biHeight: " << infoHeader.biHeight
             << ", biBitCount: " << infoHeader.biBitCount << std::endl;
   #endif
-  
+
   // Write the file header
   outFile.write(reinterpret_cast<const char*>(&fileHeader), sizeof(fileHeader));
 
@@ -41,7 +41,12 @@ bool BmpBase::saveBMP(const std::string& filePath) const {
         outFile.write(padding.data(), paddingSize);
     }
   }
-
+  std::cout << "Writing BMP Header to File:" << std::endl;
+  std::cout << "File Size: " << fileHeader.bfSize << std::endl;
+  std::cout << "Data Offset: " << fileHeader.bfOffBits << std::endl;
+  std::cout << "Width: " << infoHeader.biWidth << std::endl;
+  std::cout << "Height: " << infoHeader.biHeight << std::endl;
+  std::cout << "Bit Depth: " << infoHeader.biBitCount << std::endl;
   return outFile.good();
 }
 

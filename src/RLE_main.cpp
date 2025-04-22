@@ -12,12 +12,12 @@ int main() {
   const std::string filename_rle   = "_compressed.rle"; // Replace with your BMP file path
   const std::string filename_decomp= "_decompressed.bmp"; // Replace with your BMP file path
   
-  const std::string inputFilePath        = picturepath+filename+filename_bmp; // Replace with your BMP file path
+  const std::string inputFilePath        = picturepathmono+filename+filename_bmp; // Replace with your BMP file path
   
   const std::string compressedFilePath   = outputpath+filename+filename_rle; // 圧縮データの保存先
   const std::string decompressedFilePath = outputpath+filename+filename_decomp; // 復元後のBMPファイル
 
-  processImage(inputFilePath, compressedFilePath, decompressedFilePath);
+  RLEprocessImage(inputFilePath, compressedFilePath, decompressedFilePath);
 
   return 0;
 }

@@ -30,7 +30,7 @@ void flipImage(std::vector<uint8_t>& pixelData, int width, int height, int bytes
   }
 }
 
-void processImage(const std::string& inputFilePath, const std::string& compressedFilePath, const std::string& decompressedFilePath) {
+void RLEprocessImage(const std::string& inputFilePath, const std::string& compressedFilePath, const std::string& decompressedFilePath) {
 
   try {
       // load the image using BmpBaseDataProvider

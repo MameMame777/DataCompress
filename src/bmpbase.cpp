@@ -1,4 +1,4 @@
-#include "bmpbase.h"
+#include "../include/bmpbase.h"
 #include <iostream>
 
 BmpBase::BmpBase() {

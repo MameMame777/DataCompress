@@ -8,7 +8,7 @@
         "-fdiagnostics-color=always",
         "-g",
         "${file}",// add active file
-        "${workspaceFolder}/include/*.cpp",
+        "${workspaceFolder}/src/*.cpp",
         //include path
         "-I",
         "${workspaceFolder}/include",

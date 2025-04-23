@@ -1,6 +1,6 @@
-#include "bmpbase.h"
-#include "BmpBaseDataProvider.h"
-#include "RLEProcessor.h"
+#include "../include/bmpbase.h"
+#include "../include/BmpBaseDataProvider.h"
+#include "../include/RLEProcessor.h"
 #include <iostream>
 #include <vector>
 #include <string>

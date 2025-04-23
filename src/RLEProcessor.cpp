@@ -1,4 +1,4 @@
-#include "RLEProcessor.h"
+#include "../include/RLEProcessor.h"
 
 RLEProcessor::RLEProcessor(const DataProvider& provider, TraversalMode mode)
     : traversalMode(mode),

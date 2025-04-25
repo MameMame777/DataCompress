@@ -13,6 +13,60 @@ BmpBase::~BmpBase() {
 }
 
 //methods 
+void BmpBase::FlipImage(std::vector<uint8_t>& pixelData, int width, int height, int bytesPerPixel, int flipType) {
+  int rowSize = width * bytesPerPixel;
+
+  if (flipType == 0) {
+      // 上下反転
+      for (int y = 0; y < height / 2; ++y) {
+          int topIndex = y * rowSize;
+          int bottomIndex = (height - 1 - y) * rowSize;
+
+          for (int x = 0; x < rowSize; ++x) {
+              std::swap(pixelData[topIndex + x], pixelData[bottomIndex + x]);
+          }
+      }
+  } else if (flipType == 1) {
+      // 左右反転
+      for (int y = 0; y < height; ++y) {
+          int rowStart = y * rowSize;
+          for (int x = 0; x < width / 2; ++x) {
+              for (int b = 0; b < bytesPerPixel; ++b) {
+                  std::swap(pixelData[rowStart + x * bytesPerPixel + b],
+                            pixelData[rowStart + (width - 1 - x) * bytesPerPixel + b]);
+              }
+          }
+      }
+  } else if (flipType == 2) {
+      // 上下左右反転
+      for (int y = 0; y < height / 2; ++y) {
+          int topIndex = y * rowSize;
+          int bottomIndex = (height - 1 - y) * rowSize;
+
+          for (int x = 0; x < width; ++x) {
+              for (int b = 0; b < bytesPerPixel; ++b) {
+                  std::swap(pixelData[topIndex + x * bytesPerPixel + b],
+                            pixelData[bottomIndex + (width - 1 - x) * bytesPerPixel + b]);
+              }
+          }
+      }
+
+      // 奇数行の場合、中央行を左右反転
+      if (height % 2 != 0) {
+          int middleRowIndex = (height / 2) * rowSize;
+          uint8_t* middleRow = &pixelData[middleRowIndex];
+
+          for (int x = 0; x < width / 2; ++x) {
+              for (int b = 0; b < bytesPerPixel; ++b) {
+                  std::swap(middleRow[x * bytesPerPixel + b],
+                            middleRow[(width - 1 - x) * bytesPerPixel + b]);
+              }
+          }
+      }
+  } else {
+      throw std::invalid_argument("Invalid flipType value. Supported values are 0 (vertical), 1 (horizontal), or 2 (both).");
+  }
+}
 bool BmpBase::saveBMP(const std::string& filePath) const {
   std::ofstream outFile(filePath, std::ios::binary);
   if (!outFile) {
@@ -130,7 +184,7 @@ BmpBase BmpBase::CheckerBoard(int width, int height, int bitDepth )
   BmpBase newImage(width, height, bitDepth);
   for (int y = 0; y < height; ++y) {
       for (int x = 0; x < width; ++x) {
-          if ((x / 10 + y / 10) % 2 == 0) {
+          if ((x / 16 + y / 16) % 2 == 0) {
               newImage.setPixel(x, y, {255, 255, 255});
           } else {
               newImage.setPixel(x, y, {0, 0, 0});
@@ -156,7 +210,7 @@ bool BmpBase::load(const std::string& filePath) {
 
   // Read the info header
   inFile.read(reinterpret_cast<char*>(&infoHeader), sizeof(infoHeader));
-  if (infoHeader.biBitCount != 24 && infoHeader.biBitCount != 32) {
+  if (infoHeader.biBitCount != 8 && infoHeader.biBitCount != 24 && infoHeader.biBitCount != 32) {
       std::cerr << "Error: Unsupported bit depth (" << infoHeader.biBitCount << ")." << std::endl;
       return false;
   }

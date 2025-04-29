@@ -69,60 +69,7 @@ void BmpBase::FlipImage(std::vector<uint8_t>& pixelData, int width, int height, 
       throw std::invalid_argument("Invalid flipType value. Supported values are 0 (vertical), 1 (horizontal), or 2 (both).");
   }
 }
-void BmpBase::FlipImage(std::vector<uint8_t>& pixelData, int width, int height, int bytesPerPixel, int flipType) {
-  int rowSize = width * bytesPerPixel;
 
-  if (flipType == 0) {
-      // 上下反転
-      for (int y = 0; y < height / 2; ++y) {
-          int topIndex = y * rowSize;
-          int bottomIndex = (height - 1 - y) * rowSize;
-
-          for (int x = 0; x < rowSize; ++x) {
-              std::swap(pixelData[topIndex + x], pixelData[bottomIndex + x]);
-          }
-      }
-  } else if (flipType == 1) {
-      // 左右反転
-      for (int y = 0; y < height; ++y) {
-          int rowStart = y * rowSize;
-          for (int x = 0; x < width / 2; ++x) {
-              for (int b = 0; b < bytesPerPixel; ++b) {
-                  std::swap(pixelData[rowStart + x * bytesPerPixel + b],
-                            pixelData[rowStart + (width - 1 - x) * bytesPerPixel + b]);
-              }
-          }
-      }
-  } else if (flipType == 2) {
-      // 上下左右反転
-      for (int y = 0; y < height / 2; ++y) {
-          int topIndex = y * rowSize;
-          int bottomIndex = (height - 1 - y) * rowSize;
-
-          for (int x = 0; x < width; ++x) {
-              for (int b = 0; b < bytesPerPixel; ++b) {
-                  std::swap(pixelData[topIndex + x * bytesPerPixel + b],
-                            pixelData[bottomIndex + (width - 1 - x) * bytesPerPixel + b]);
-              }
-          }
-      }
-
-      // 奇数行の場合、中央行を左右反転
-      if (height % 2 != 0) {
-          int middleRowIndex = (height / 2) * rowSize;
-          uint8_t* middleRow = &pixelData[middleRowIndex];
-
-          for (int x = 0; x < width / 2; ++x) {
-              for (int b = 0; b < bytesPerPixel; ++b) {
-                  std::swap(middleRow[x * bytesPerPixel + b],
-                            middleRow[(width - 1 - x) * bytesPerPixel + b]);
-              }
-          }
-      }
-  } else {
-      throw std::invalid_argument("Invalid flipType value. Supported values are 0 (vertical), 1 (horizontal), or 2 (both).");
-  }
-}
 bool BmpBase::saveBMP(const std::string& filePath) const {
   std::ofstream outFile(filePath, std::ios::binary);
   if (!outFile) {

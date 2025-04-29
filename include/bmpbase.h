@@ -19,6 +19,9 @@ public:
     BmpBase(int width, int height, int bitDepth = 24);
     ~BmpBase();
 
+    //bmp image flipper
+    void FlipImage(std::vector<uint8_t>& pixelData, int width, int height, int bytesPerPixel,int flipType=0);
+    
     // bmp acceassor
     // get file header
     const BitmapFileHeader& getFileHeader() const {

@@ -1,5 +1,5 @@
 #include <string>
-#include "../include/RunLengh.h"
+#include "../include/RunLength.h"
 
 int main() {
   const std::string picturepath    = "../picture/color/"; // Replace with your BMP file path

@@ -26,7 +26,7 @@ private:
     TraversalMode traversalMode;
     int width;  // image width
     int height; // image height
-    const std::vector<uint8_t>& imageData; // ピクセルデータ
+    const std::vector<uint8_t>& imageData; // pixel data
 
     void compressRowWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output);
     void compressColumnWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output);

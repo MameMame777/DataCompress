@@ -60,10 +60,8 @@ public:
 
 
 private:
-    // ピクセルデータ
     std::vector<uint8_t> pixelData;
-
-    // 内部ヘルパーメソッド
+    std::vector<BitmapColorPalette> ColorPalette;
     bool validateHeader() const;
     size_t calculateRowSize() const;
     size_t calculatePixelArraySize() const;

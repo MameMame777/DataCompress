@@ -2,7 +2,7 @@
 #define BMPHEADER_H
 
 #include <cstdint>
-
+#include <vector>
 #pragma pack(push, 1)
 struct BitmapFileHeader {
     uint16_t bfType;        // 'BM'
@@ -26,6 +26,14 @@ struct BitmapInfoHeader {
     uint32_t biClrImportant;  // number of important colors (0 = all colors are important)
 } ;
 
+struct BitmapColorPalette {
+    uint8_t blue;        // blue component
+    uint8_t green;       // green component
+    uint8_t red;         // red component
+    uint8_t reserved;    // reserved (must be 0)
+} ;
+
+extern std::vector<BitmapColorPalette> ColorPalette;     
 extern BitmapFileHeader fileHeader;
 extern BitmapInfoHeader infoHeader;
 #endif // BMPHEADER_H

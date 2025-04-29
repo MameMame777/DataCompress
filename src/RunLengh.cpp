@@ -1,4 +1,5 @@
 #include "../include/bmpbase.h"
+#include "../include/Globalconfig.h"
 #include "../include/BmpBaseDataProvider.h"
 #include "../include/RLEProcessor.h"
 #include <iostream>
@@ -46,7 +47,7 @@ void RLEprocessImage(const std::string& inputFilePath, const std::string& compre
     // decompression process
     std::cout << "Decompressing image..." << std::endl;
     processor.decompress(compressedData, decompressedData);
-    bmpBase.FlipImage(decompressedData, width, height, bytesPerPixel,0);
+    bmpBase.FlipImage(decompressedData, width, height, bytesPerPixel,GlobalConfig::vertically);
     std::cout << "Decompression completed. Decompressed data size: " << decompressedData.size() << " bytes" << std::endl;
 
     // 復元データを新しいBMP画像として保存

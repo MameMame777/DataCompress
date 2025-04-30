@@ -16,7 +16,7 @@ class BmpBase {
 public:
     // Constructor and Destructor
     BmpBase(); // default constructor
-    BmpBase(int width, int height, int bitDepth = 24);
+    BmpBase(int width, int height, int bitDepth );
     ~BmpBase();
 
     //bmp image flipper
@@ -30,6 +30,10 @@ public:
     // get info header
     const BitmapInfoHeader& getInfoHeader() const {
         return infoHeader;
+    }
+    // get color palette
+    const std::vector<BitmapColorPalette>& getColorPalette() const {
+        return ColorPalette;
     }
     // get pixel data
     const std::vector<uint8_t>& getPixelData() const {

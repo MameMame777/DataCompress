@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <fstream>
 #include "bmpheader.h"
-#include <iostream>
+
 struct Color {
     uint8_t r, g, b;
 };

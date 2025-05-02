@@ -27,9 +27,6 @@ namespace WYLEProcessing {
   }
 
   void WYLEProcessor::decompress(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
-    if (input.size() % 2 != 0) {
-        throw std::invalid_argument("Invalid RLE compressed data.");
-    }
     if (traversalMode == TraversalMode::RowWise) {
         decompressRowWise(input, output);
     } else if (traversalMode == TraversalMode::ColumnWise) {

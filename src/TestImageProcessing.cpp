@@ -1,6 +1,7 @@
 #include "../include/TestImageProcessing.h"
 
 namespace Testing {
+ 
   bool TestImageProcessing::compareImages(const std::string& beforePath, const std::string& afterPath) {
   std::vector<uint8_t> beforeData = TestImageProcessing::readFile(beforePath);
   std::vector<uint8_t> afterData = TestImageProcessing::readFile(afterPath);

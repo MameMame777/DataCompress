@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <filesystem>
 
-namespace WYLEProcessing {
+namespace TestImageProcessing {
   class TestImageProcessing {
     public:
         

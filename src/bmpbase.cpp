@@ -167,8 +167,8 @@ void BmpBase::CreateNewImage(int width, int height, int bitDepth )
   if (width <= 0 || height <= 0) {
       throw std::invalid_argument("Width and height must be positive integers.");
   }
-  if (bitDepth != 24 && bitDepth != 32) {
-      throw std::invalid_argument("Bit depth must be either 24 or 32.");
+  if (bitDepth != 8 &&bitDepth != 24 && bitDepth != 32) {
+      throw std::invalid_argument("Bit depth must be either 8 or 24 or 32.");
   }
   CreateHeader(width, height, bitDepth);
   CreatePixelData(width, height, bitDepth);

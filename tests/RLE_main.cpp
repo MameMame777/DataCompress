@@ -1,7 +1,11 @@
 #include <string>
 #include "../include/RunLength.h"
+#include "../include/TestImageProcessing.h"
 
 int main() {
+  Testing::TestImageProcessing TestImageProcessing;
+
+
   const std::string picturepath    = "../picture/color/"; // Replace with your BMP file path
   const std::string picturepathmono= "../picture/mono/";  // Replace with your BMP file path
   const std::string outputpath     = "../picture/output/";  // Replace with your BMP file path
@@ -18,6 +22,7 @@ int main() {
   const std::string decompressedFilePath = outputpath+filename+filename_decomp; // 復元後のBMPファイル
 
   RLEprocessImage(inputFilePath, compressedFilePath, decompressedFilePath);
-
+  TestImageProcessing.compareImages   (inputFilePath, decompressedFilePath);
+  TestImageProcessing.compareFileSizes(inputFilePath, decompressedFilePath);
   return 0;
 }

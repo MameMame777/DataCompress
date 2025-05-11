@@ -12,14 +12,14 @@ int main() {
   const std::string outputpathcolor   = "../picture/output/color/";  // Replace with your BMP file path
   
   const std::string filename_bmp   = ".bmp";            // Replace with your BMP file path
-  const std::string filename_wyle   = "_compressed.wyle"; // Replace with your BMP file path
-  const std::string filename_decomp= "_wyle_decompressed.bmp"; // Replace with your BMP file path  
+  const std::string filename_hoffman   = "_compressed.hoffman"; // Replace with your BMP file path
+  const std::string filename_decomp= "_hoffman_decompressed.bmp"; // Replace with your BMP file path  
 
   for (const auto& pair : TestImageProcessing.MonoToString) {
     
     std::string filename       =  pair.second;         // Replace with your BMP file path
     const std::string inputFilePath        = picturepathmono+filename+filename_bmp; // Replace with your BMP file path
-    const std::string compressedFilePath   = outputpathmono+filename+filename_wyle; 
+    const std::string compressedFilePath   = outputpathmono+filename+filename_hoffman; 
     const std::string decompressedFilePath = outputpathmono+filename+filename_decomp; 
   
     if (std::filesystem::exists(decompressedFilePath)) {
@@ -35,7 +35,7 @@ int main() {
     
     std::string filename       =  pair.second;         // Replace with your BMP file path
     const std::string inputFilePath        = picturepathcolor+filename+filename_bmp; // Replace with your BMP file path
-    const std::string compressedFilePath   = outputpathcolor+filename+filename_wyle; 
+    const std::string compressedFilePath   = outputpathcolor+filename+filename_hoffman; 
     const std::string decompressedFilePath = outputpathcolor+filename+filename_decomp; 
   
     if (std::filesystem::exists(decompressedFilePath)) {

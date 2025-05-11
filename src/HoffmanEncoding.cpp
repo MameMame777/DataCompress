@@ -1,7 +1,7 @@
 #include "../include/bmpbase.h"
 #include "../include/Globalconfig.h"
 #include "../include/BmpBaseDataProvider.h"
-#include "../include/HOFFMANProcessor.h"
+#include "../include/HoffmanProcessor.h"
 #include <iostream>
 #include <vector>
 #include <string>

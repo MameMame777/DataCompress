@@ -181,7 +181,7 @@ namespace HOFFMANProcessing {
     int datasize = width * height; // Assuming width and height are class members
     std::vector<int> histgram(datasize, 0); // サイズ datasize の配列を 0 で初期化
 
-    // Step 2: Read histogram from input (Wyle decoding)
+    // Step 2: Read histogram from input (Hoffman decoding)
     int inputIndex = 0;
     auto fgetBit = [&]() -> int {
       static int bits = 0;
@@ -201,7 +201,7 @@ namespace HOFFMANProcessing {
       return val;
     };
 
-    auto readWyleCode = [&]() -> int {
+    auto readHoffmanCode = [&]() -> int {
       int headsize = 0;
       while (fgetBit() == 1) {
         headsize++;
@@ -217,7 +217,7 @@ namespace HOFFMANProcessing {
     };
 
     for (int i = 0; i < 256; i++) {
-      histgram[i] = readWyleCode() - 1;
+      histgram[i] = readHoffmanCode() - 1;
     }
 
     // Step 3: Reconstruct Huffman tree

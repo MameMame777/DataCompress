@@ -1,4 +1,5 @@
 #include "../include/HoffmanProcessor.h"
+#include "iostream"
 namespace HOFFMANProcessing {
   HOFFMANProcessor::HOFFMANProcessor(const DataProvider& provider, TraversalMode mode)
     : traversalMode(mode),
@@ -37,7 +38,22 @@ namespace HOFFMANProcessing {
         }
       }
 
-      if (d1 == -1 || d2 == -1) break;
+
+    // Check if valid nodes were found
+    if (d1 == -1 || d2 == -1) {
+        std::cout << "No more nodes to process. Breaking loop." << std::endl;
+        break;
+    }
+
+    // Check if d1 and d2 are within bounds
+    if (d1 < 0 || d1 >= 2 * n || d2 < 0 || d2 >= 2 * n) {
+        throw std::logic_error("d1 or d2 is out of bounds.");
+    }
+
+    // Check if d1 and d2 are not the same
+    if (d1 == d2) {
+        throw std::logic_error("d1 and d2 must not be the same.");
+    }
 
       // Create new node
       tree.left_node[treesize] = d1;
@@ -88,10 +104,9 @@ namespace HOFFMANProcessing {
 
   void HOFFMANProcessor::compressRowWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     // Step 1: Initialize variables
-    int histgram[256] = {0}; // Frequency table for Huffman encoding
     HuffmanTree tree;
     int datasize = input.size();
-
+    int histgram[datasize] = {0}; // Frequency table for Huffman encoding
     // Step 2: Calculate histogram (frequency of each value)
     for (int i = 0; i < datasize; i++) {
       histgram[input[i]]++;
@@ -164,8 +179,8 @@ namespace HOFFMANProcessing {
   void HOFFMANProcessor::decompressRowWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     // Step 1: Initialize variables
     HuffmanTree tree;
-    int histgram[256] = {0};
     int datasize = width * height; // Assuming width and height are class members
+    std::vector<int> histgram(datasize, 0); // サイズ datasize の配列を 0 で初期化
 
     // Step 2: Read histogram from input (Wyle decoding)
     int inputIndex = 0;
@@ -207,7 +222,7 @@ namespace HOFFMANProcessing {
     }
 
     // Step 3: Reconstruct Huffman tree
-    makeHuffmanTree(histgram, 256, tree);
+    makeHuffmanTree(histgram.data(), 256, tree);
 
     // Step 4: Decode data using Huffman tree
     auto getValue = [&]() -> int {

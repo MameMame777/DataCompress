@@ -105,14 +105,14 @@ namespace HOFFMANProcessing {
     // Step 1: Initialize variables
     HuffmanTree tree;
     int datasize = input.size();
-    int histgram[datasize] = {0}; // Frequency table for Huffman encoding
+    std::vector<int> histgram(datasize, 0); // サイズ datasize の配列を 0 で初期化
     // Step 2: Calculate histogram (frequency of each value)
     for (int i = 0; i < datasize; i++) {
       histgram[input[i]]++;
     }
 
     // Step 3: Build Huffman tree
-    makeHuffmanTree(histgram, 256, tree);
+    makeHuffmanTree(histgram.data(), 256, tree);
 
     // Step 4: Initialize bit-level output
     int bits = 0;

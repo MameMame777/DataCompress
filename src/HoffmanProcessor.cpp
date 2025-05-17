@@ -41,7 +41,6 @@ namespace HOFFMANProcessing {
 
     // Check if valid nodes were found
     if (d1 == -1 || d2 == -1) {
-        std::cout << "No more nodes to process. Breaking loop." << std::endl;
         break;
     }
 

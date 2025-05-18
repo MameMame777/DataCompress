@@ -31,6 +31,7 @@ int main() {
     TestImageProcessing.compareFileSizes(inputFilePath, decompressedFilePath);
   }
 
+  /*
   for (const auto& pair : TestImageProcessing.ColorToString) {
     
     std::string filename       =  pair.second;         // Replace with your BMP file path
@@ -46,5 +47,6 @@ int main() {
     TestImageProcessing.compareImages   (inputFilePath, decompressedFilePath);
     TestImageProcessing.compareFileSizes(inputFilePath, decompressedFilePath);
   }
+    */
   return 0;
 }

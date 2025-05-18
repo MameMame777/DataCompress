@@ -43,7 +43,6 @@ namespace HUFFMANProcessing {
     if (d1 == -1 || d2 == -1) {
         break;
     }
-
     // Check if d1 and d2 are within bounds
     if (d1 < 0 || d1 >= 2 * n || d2 < 0 || d2 >= 2 * n) {
         throw std::logic_error("d1 or d2 is out of bounds.");
@@ -107,13 +106,13 @@ namespace HUFFMANProcessing {
     HuffmanTree tree;
     int datasize = input.size();
     int buffer = 0;
-    std::vector<int> histgram(256, 0);
+    std::vector<int> histgram(N*2, 0);
     // Step 2: Calculate histogram (frequency of each value)
     for (int i = 0; i < datasize; i++) {
         histgram[input[i]]++;
     }
     // Step 3: Build Huffman tree
-    makeHuffmanTree(histgram.data(), 256, tree);
+    makeHuffmanTree(histgram.data(), N, tree);
     // Step 4: Initialize bit-level output
     int bits = 0;
     int bdata = 0;
@@ -168,7 +167,7 @@ namespace HUFFMANProcessing {
         }
     };
 
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < N; i++) {
         outputWyleCode(histgram[i] + 1);
     }
 
@@ -211,7 +210,7 @@ namespace HUFFMANProcessing {
     // Step 1: Initialize variables
     HuffmanTree tree;
     int datasize = width * height; // Assuming width and height are class members
-    std::vector<int> histgram(256, 0); // サイズ datasize の配列を 0 で初期化
+    std::vector<int> histgram(N*2, 0); // サイズ datasize の配列を 0 で初期化
 
     // Step 2: Read histogram from input (HUFFMAN decoding)
     int inputIndex = 0;
@@ -248,17 +247,17 @@ namespace HUFFMANProcessing {
       return answer + 1;
     };
 
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < N; i++) {
       histgram[i] = readHUFFMANCode() - 1;
     }
 
     // Step 3: Reconstruct Huffman tree
-    makeHuffmanTree(histgram.data(), 256, tree);
+    makeHuffmanTree(histgram.data(), N, tree);
 
     // Step 4: Decode data using Huffman tree
     auto getValue = [&]() -> int {
       int nowNode = tree.treesize - 1; // Start at the root of the tree
-      while (nowNode >= 256) { // While not a leaf node
+      while (nowNode >= N) { // While not a leaf node
         int bit = fgetBit();
         if (bit == 0) {
           nowNode = tree.left_node[nowNode];

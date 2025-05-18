@@ -1,5 +1,5 @@
-#ifndef HOFFMANPROCESSOR_H
-#define HOFFMANPROCESSOR_H
+#ifndef HUFFMANPROCESSOR_H
+#define HUFFMANPROCESSOR_H
 
 #include "ImageProcessor.h"
 #include "BmpBaseDataProvider.h"
@@ -7,7 +7,7 @@
 #include <vector>
 #include <cstdint>
 #include <stdexcept>
-namespace HOFFMANProcessing {
+namespace HUFFMANProcessing {
 /**
  * @brief Specifies the traversal mode for processing image data.
  * 
@@ -44,15 +44,15 @@ enum class TraversalMode {
  * @brief Processes an image using Huffman encoding.
  * @details This class provides methods to compress and decompress image data using Huffman encoding.
  */
-class HOFFMANProcessor : public ImageProcessor {
+class HUFFMANProcessor : public ImageProcessor {
 public:
   /**
-   * @brief Constructs a HOFFMANProcessor object.
+   * @brief Constructs a HUFFMANProcessor object.
    * @param provider The data provider for the image data.
    * @param mode The traversal mode for processing the image data (default is RowWise).
    */
-  explicit HOFFMANProcessor(const DataProvider& provider, TraversalMode mode = TraversalMode::RowWise);
-  ~HOFFMANProcessor() override;
+  explicit HUFFMANProcessor(const DataProvider& provider, TraversalMode mode = TraversalMode::RowWise);
+  ~HUFFMANProcessor() override;
   /**
    * @brief  Prepares the image data for processing.but not used in this class.
    * @param input The input image data. 
@@ -103,4 +103,4 @@ private:
   void decompressColumnWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output);
 };
 }
-#endif // HOFFMANPROCESSOR_H
+#endif // HUFFMANPROCESSOR_H

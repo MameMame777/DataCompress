@@ -1,19 +1,19 @@
 #include "../include/bmpbase.h"
 #include "../include/Globalconfig.h"
 #include "../include/BmpBaseDataProvider.h"
-#include "../include/HoffmanProcessor.h"
+#include "../include/HUFFMANProcessor.h"
 #include <iostream>
 #include <vector>
 #include <string>
-namespace HOFFMANProcessing {
+namespace HUFFMANProcessing {
 
-  void HOFFMANprocessImage(const std::string& inputFilePath, const std::string& compressedFilePath, const std::string& decompressedFilePath) {
+  void HUFFMANprocessImage(const std::string& inputFilePath, const std::string& compressedFilePath, const std::string& decompressedFilePath) {
 
     try {
       // load the image using BmpBaseDataProvider
       BmpBase bmpBase;
       BmpBaseDataProvider provider(inputFilePath);
-      HOFFMANProcessor processor(provider, TraversalMode::RowWise);
+      HUFFMANProcessor processor(provider, TraversalMode::RowWise);
   
       int width = provider.getHeaderData()[18] | (provider.getHeaderData()[19] << 8);
       int height = provider.getHeaderData()[22] | (provider.getHeaderData()[23] << 8);
@@ -28,6 +28,10 @@ namespace HOFFMANProcessing {
       processor.compress(provider.getImageData(), compressedData);
       std::cout << "Compression completed. Compressed data size: " << compressedData.size() << " bytes" << std::endl;
       // add header data to compressed data
+      std::cout << "Header data size: " << headerData.size() << " bytes" << std::endl;
+if (headerData.empty()) {
+    throw std::runtime_error("Header data is empty.");
+}
       std::vector<uint8_t> compressedWithHeader = headerData;
       compressedWithHeader.insert(compressedWithHeader.end(), compressedData.begin(), compressedData.end());
   

@@ -1,13 +1,13 @@
-#include "../include/HoffmanProcessor.h"
+#include "../include/HUFFMANProcessor.h"
 #include "iostream"
-namespace HOFFMANProcessing {
-  HOFFMANProcessor::HOFFMANProcessor(const DataProvider& provider, TraversalMode mode)
+namespace HUFFMANProcessing {
+  HUFFMANProcessor::HUFFMANProcessor(const DataProvider& provider, TraversalMode mode)
     : traversalMode(mode),
       width(provider.getHeaderData()[18] | (provider.getHeaderData()[19] << 8)),
       height(provider.getHeaderData()[22] | (provider.getHeaderData()[23] << 8)),
       imageData(provider.getImageData()) {}
 
-  HOFFMANProcessor::~HOFFMANProcessor() {}
+  HUFFMANProcessor::~HUFFMANProcessor() {}
 
   void makeHuffmanTree(int* histgram, int n, HuffmanTree& tree) {
     int treesize = n;
@@ -70,11 +70,12 @@ namespace HOFFMANProcessing {
     tree.treesize = treesize;
   }
 
-  void HOFFMANProcessor::prepare(const std::vector<uint8_t>& input) {
+  void HUFFMANProcessor::prepare(const std::vector<uint8_t>& input) {
     // Implement preparation logic if needed
   }
 
-  void HOFFMANProcessor::compress(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
+  void HUFFMANProcessor::compress(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
+    output.clear();
     if (input.empty()) {
       throw std::invalid_argument("Input data is empty.");
     }
@@ -87,7 +88,7 @@ namespace HOFFMANProcessing {
     }
   }
 
-  void HOFFMANProcessor::decompress(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
+  void HUFFMANProcessor::decompress(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     if (traversalMode == TraversalMode::RowWise) {
       decompressRowWise(input, output);
     } else if (traversalMode == TraversalMode::ColumnWise) {
@@ -97,15 +98,15 @@ namespace HOFFMANProcessing {
     }
   }
 
-  void HOFFMANProcessor::finalize(const std::vector<uint8_t>& output) {
+  void HUFFMANProcessor::finalize(const std::vector<uint8_t>& output) {
     // Implement post-processing if necessary
   }
 
-  void HOFFMANProcessor::compressRowWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
+  void HUFFMANProcessor::compressRowWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     // Step 1: Initialize variables
     HuffmanTree tree;
     int datasize = input.size();
-    std::vector<int> histgram(datasize, 0); // サイズ datasize の配列を 0 で初期化
+    std::vector<int> histgram(256, 0); 
     // Step 2: Calculate histogram (frequency of each value)
     for (int i = 0; i < datasize; i++) {
       histgram[input[i]]++;
@@ -130,6 +131,7 @@ namespace HOFFMANProcessing {
 
     auto flushBit = [&]() {
       while (bits > 0 && bits < 8) {
+        std::cout <<"bits: " << bits << std::endl;
         fputBit(0);
       }
     };
@@ -171,17 +173,17 @@ namespace HOFFMANProcessing {
     flushBit();
   }
 
-  void HOFFMANProcessor::compressColumnWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
+  void HUFFMANProcessor::compressColumnWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     // Implement column-wise compression logic
   }
 
-  void HOFFMANProcessor::decompressRowWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
+  void HUFFMANProcessor::decompressRowWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     // Step 1: Initialize variables
     HuffmanTree tree;
     int datasize = width * height; // Assuming width and height are class members
-    std::vector<int> histgram(datasize, 0); // サイズ datasize の配列を 0 で初期化
+    std::vector<int> histgram(256, 0); // サイズ datasize の配列を 0 で初期化
 
-    // Step 2: Read histogram from input (Hoffman decoding)
+    // Step 2: Read histogram from input (HUFFMAN decoding)
     int inputIndex = 0;
     auto fgetBit = [&]() -> int {
       static int bits = 0;
@@ -201,7 +203,7 @@ namespace HOFFMANProcessing {
       return val;
     };
 
-    auto readHoffmanCode = [&]() -> int {
+    auto readHUFFMANCode = [&]() -> int {
       int headsize = 0;
       while (fgetBit() == 1) {
         headsize++;
@@ -217,7 +219,7 @@ namespace HOFFMANProcessing {
     };
 
     for (int i = 0; i < 256; i++) {
-      histgram[i] = readHoffmanCode() - 1;
+      histgram[i] = readHUFFMANCode() - 1;
     }
 
     // Step 3: Reconstruct Huffman tree
@@ -243,7 +245,7 @@ namespace HOFFMANProcessing {
     }
   }
 
-  void HOFFMANProcessor::decompressColumnWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
+  void HUFFMANProcessor::decompressColumnWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     // Implement column-wise decompression logic
   }
 }

@@ -29,9 +29,9 @@ namespace HUFFMANProcessing {
       std::cout << "Compression completed. Compressed data size: " << compressedData.size() << " bytes" << std::endl;
       // add header data to compressed data
       std::cout << "Header data size: " << headerData.size() << " bytes" << std::endl;
-if (headerData.empty()) {
-    throw std::runtime_error("Header data is empty.");
-}
+      if (headerData.empty()) {
+        throw std::runtime_error("Header data is empty.");
+      }
       std::vector<uint8_t> compressedWithHeader = headerData;
       compressedWithHeader.insert(compressedWithHeader.end(), compressedData.begin(), compressedData.end());
   

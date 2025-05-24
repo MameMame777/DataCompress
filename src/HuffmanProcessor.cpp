@@ -8,7 +8,38 @@ namespace HUFFMANProcessing {
       imageData(provider.getImageData()) {}
 
   HUFFMANProcessor::~HUFFMANProcessor() {}
+  void saveHuffmanTree(const HuffmanTree& tree) {
+      std::ofstream treeFile("huffman_tree_compress.txt");
+      for (int i = 0; i < tree.treesize; i++) {
+          treeFile << i << " " 
+                   << tree.left_node[i] << " " 
+                   << tree.right_node[i] << " " 
+                   << tree.parent[i] << "\n";
+      }
+      treeFile.close();
+  }
+  void saveHuffmanTreeDecompress(const HuffmanTree& tree) {
+      std::ofstream treeFile("huffman_tree_decompress.txt");
+      for (int i = 0; i < tree.treesize; i++) {
+          treeFile << i << " " 
+                   << tree.left_node[i] << " " 
+                   << tree.right_node[i] << " " 
+                   << tree.parent[i] << "\n";
+      }
+      treeFile.close();
+  }
+  void saveHistogramToFile(const std::vector<int>& histgram, const std::string& filePath) {
+    std::ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        throw std::runtime_error("Failed to open file: " + filePath);
+    }
 
+    for (size_t i = 0; i < histgram.size(); ++i) {
+        outFile << "Index " << i << ": " << histgram[i] << "\n";
+    }
+
+    outFile.close();
+  }
   void makeHuffmanTree(int* histgram, int n, HuffmanTree& tree) {
     int treesize = n;
     int d1, d2;
@@ -95,6 +126,7 @@ namespace HUFFMANProcessing {
     } else {
       throw std::logic_error("Unsupported traversal mode.");
     }
+
   }
 
   void HUFFMANProcessor::finalize(const std::vector<uint8_t>& output) {
@@ -107,12 +139,17 @@ namespace HUFFMANProcessing {
     int datasize = input.size();
     int buffer = 0;
     std::vector<int> histgram(N*2, 0);
+    std::vector<int> histgram_for_compress(N*2, 0);
+    
     // Step 2: Calculate histogram (frequency of each value)
     for (int i = 0; i < datasize; i++) {
         histgram[input[i]]++;
+        histgram_for_compress[input[i]]++;
     }
+    //saveHistogramToFile(histgram, "histogram_compress.txt");
     // Step 3: Build Huffman tree
     makeHuffmanTree(histgram.data(), N, tree);
+    saveHuffmanTree(tree);  
     // Step 4: Initialize bit-level output
     int bits = 0;
     int bdata = 0;
@@ -143,7 +180,7 @@ namespace HUFFMANProcessing {
     // Step 5: Output histogram using Wyle encoding
     auto outputWyleCode = [&](int value) {
         int bit;
-        int x = absi(value - 1);
+        int x = absi(value);
         int length = 0;
 
         // Calculate the header length
@@ -168,7 +205,7 @@ namespace HUFFMANProcessing {
     };
 
     for (int i = 0; i < N; i++) {
-        outputWyleCode(histgram[i] + 1);
+        outputWyleCode(histgram_for_compress[i]);
     }
 
     // Step 6: Encode data using Huffman tree
@@ -210,70 +247,71 @@ namespace HUFFMANProcessing {
     // Step 1: Initialize variables
     HuffmanTree tree;
     int datasize = width * height; // Assuming width and height are class members
-    std::vector<int> histgram(N*2, 0); // サイズ datasize の配列を 0 で初期化
-
-    // Step 2: Read histogram from input (HUFFMAN decoding)
+    std::vector<int> histgram(N*2, 0);
+    int bitDepth = 8; // Example: 8-bit BMP
     int inputIndex = 0;
+    //print input 
+    std::cout << "Input data: ";
+    std::cout << "input size =  "<<std::dec <<input.size() << std::endl;
+    for (size_t i = 0; i < input.size(); ++i) {
+        std::cout << std::hex << static_cast<int>(input[i]) << " ";
+    }
+      int bits = 0;
+      int bdata = 0;    
     auto fgetBit = [&]() -> int {
-      static int bits = 0;
-      static int bdata = 0;
-
       if (bits == 0) {
-        if (inputIndex >= input.size()) {
-          throw std::runtime_error("Unexpected end of input data");
-        }
-        bdata = input[inputIndex++];
-        bits = 8;
+          bdata = input[inputIndex++];
+          bits = 8;
       }
-
       int val = (bdata >> 7) & 1;
       bdata = (bdata << 1) & 0xFF;
       bits--;
       return val;
     };
 
+    // Step 3: Read histogram from input
     auto readHUFFMANCode = [&]() -> int {
-      int headsize = 0;
-      while (fgetBit() == 1) {
+    int headsize = 0;
+    while (fgetBit() == 1) {
         headsize++;
-      }
-      headsize += 2;
+    }
+    headsize += 2;
 
-      int answer = 0;
-      for (int i = 0; i < headsize; i++) {
+    int answer = 0;
+    for (int i = 0; i < headsize; i++) {
         int bit = fgetBit() << i;
         answer |= bit;
-      }
-      return answer + 1;
+    }
+    return answer;
     };
 
+    
     for (int i = 0; i < N; i++) {
-      histgram[i] = readHUFFMANCode() - 1;
-    }
-
-    // Step 3: Reconstruct Huffman tree
-    makeHuffmanTree(histgram.data(), N, tree);
-
-    // Step 4: Decode data using Huffman tree
-    auto getValue = [&]() -> int {
-      int nowNode = tree.treesize - 1; // Start at the root of the tree
-      while (nowNode >= N) { // While not a leaf node
-        int bit = fgetBit();
-        if (bit == 0) {
-          nowNode = tree.left_node[nowNode];
-        } else {
-          nowNode = tree.right_node[nowNode];
-        }
+        histgram[i] = readHUFFMANCode() ;    
       }
-      return nowNode; // Leaf node reached, return the value
+    saveHistogramToFile(histgram, "histogram_decompress.txt");
+    // Step 4: Reconstruct Huffman tree
+    makeHuffmanTree(histgram.data(), N, tree);
+    saveHuffmanTreeDecompress(tree);
+    // Step 5: Decode data using Huffman tree
+    auto getValue = [&]() -> int {
+        int nowNode = tree.treesize - 1; // Start at the root of the tree
+        while (nowNode >= N) { // While not a leaf node
+            int bit = fgetBit();
+            if (bit == 0) {
+                nowNode = tree.left_node[nowNode];
+            } else {
+                nowNode = tree.right_node[nowNode];
+            }
+        }
+        return nowNode; // Leaf node reached, return the value
     };
 
     for (int i = 0; i < datasize; i++) {
-      int value = getValue();
-      output.push_back(static_cast<uint8_t>(value));
+        int value = getValue();
+        output.push_back(static_cast<uint8_t>(value));
     }
   }
-
   void HUFFMANProcessor::decompressColumnWise(const std::vector<uint8_t>& input, std::vector<uint8_t>& output) {
     // Implement column-wise decompression logic
   }

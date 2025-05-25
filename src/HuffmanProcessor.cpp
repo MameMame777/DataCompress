@@ -8,38 +8,6 @@ namespace HUFFMANProcessing {
       imageData(provider.getImageData()) {}
 
   HUFFMANProcessor::~HUFFMANProcessor() {}
-  void saveHuffmanTree(const HuffmanTree& tree) {
-      std::ofstream treeFile("huffman_tree_compress.txt");
-      for (int i = 0; i < tree.treesize; i++) {
-          treeFile << i << " " 
-                   << tree.left_node[i] << " " 
-                   << tree.right_node[i] << " " 
-                   << tree.parent[i] << "\n";
-      }
-      treeFile.close();
-  }
-  void saveHuffmanTreeDecompress(const HuffmanTree& tree) {
-      std::ofstream treeFile("huffman_tree_decompress.txt");
-      for (int i = 0; i < tree.treesize; i++) {
-          treeFile << i << " " 
-                   << tree.left_node[i] << " " 
-                   << tree.right_node[i] << " " 
-                   << tree.parent[i] << "\n";
-      }
-      treeFile.close();
-  }
-  void saveHistogramToFile(const std::vector<int>& histgram, const std::string& filePath) {
-    std::ofstream outFile(filePath);
-    if (!outFile.is_open()) {
-        throw std::runtime_error("Failed to open file: " + filePath);
-    }
-
-    for (size_t i = 0; i < histgram.size(); ++i) {
-        outFile << "Index " << i << ": " << histgram[i] << "\n";
-    }
-
-    outFile.close();
-  }
   void makeHuffmanTree(int* histgram, int n, HuffmanTree& tree) {
     int treesize = n;
     int d1, d2;
@@ -149,7 +117,6 @@ namespace HUFFMANProcessing {
     //saveHistogramToFile(histgram, "histogram_compress.txt");
     // Step 3: Build Huffman tree
     makeHuffmanTree(histgram.data(), N, tree);
-    saveHuffmanTree(tree);  
     // Step 4: Initialize bit-level output
     int bits = 0;
     int bdata = 0;
@@ -253,9 +220,6 @@ namespace HUFFMANProcessing {
     //print input 
     std::cout << "Input data: ";
     std::cout << "input size =  "<<std::dec <<input.size() << std::endl;
-    for (size_t i = 0; i < input.size(); ++i) {
-        std::cout << std::hex << static_cast<int>(input[i]) << " ";
-    }
       int bits = 0;
       int bdata = 0;    
     auto fgetBit = [&]() -> int {
@@ -289,10 +253,8 @@ namespace HUFFMANProcessing {
     for (int i = 0; i < N; i++) {
         histgram[i] = readHUFFMANCode() ;    
       }
-    saveHistogramToFile(histgram, "histogram_decompress.txt");
     // Step 4: Reconstruct Huffman tree
     makeHuffmanTree(histgram.data(), N, tree);
-    saveHuffmanTreeDecompress(tree);
     // Step 5: Decode data using Huffman tree
     auto getValue = [&]() -> int {
         int nowNode = tree.treesize - 1; // Start at the root of the tree

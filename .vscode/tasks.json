@@ -3,7 +3,7 @@
     {
       "type": "cppbuild",
       "label": "C/C++: g++.exe build active file",
-      "command": "E:\\Nautilus\\programfiles\\mingw64\\bin\\g++.exe",
+      "command": "g++.exe", // use g++ declared in your environment PATH
       "args": [
         "-fdiagnostics-color=always",
         "-g",

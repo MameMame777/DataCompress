@@ -21,7 +21,7 @@ int main() {
   const std::string compressedFilePath   = outputpath+filename+filename_rle; // 圧縮データの保存先
   const std::string decompressedFilePath = outputpath+filename+filename_decomp; // 復元後のBMPファイル
 
-  RLEprocessImage(inputFilePath, compressedFilePath, decompressedFilePath);
+  RLEProcessing::RLEprocessImage(inputFilePath, compressedFilePath, decompressedFilePath);
   TestImageProcessing.compareImages   (inputFilePath, decompressedFilePath);
   TestImageProcessing.compareFileSizes(inputFilePath, decompressedFilePath);
   return 0;

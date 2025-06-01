@@ -43,3 +43,6 @@ The decompressed image is the same as the original image.
         uint32_t biClrImportant;  // number of important colors (0 = all colors are important)
     } infoHeader;
 ```
+####　LZW compression 
+
+[aboutLZW.md](./document/aboutLZW.md)

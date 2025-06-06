@@ -8,17 +8,17 @@ namespace LZWProcessing {
 
   LZWProcessor::~LZWProcessor() {}
 
-  int LZWProcessor::initDictionary(Word *dictionary, int dic_size, int charactors) {
+  int LZWProcessor::initDictionary(Word *dictionary, int dic_size, int characters) {
     int i;
-    for (i = 0; i < charactors; i++) {
+    for (i = 0; i < characters; i++) {
       dictionary[i].charactor = i;
       dictionary[i].parent_code = -1;
     }
-    for (i = charactors; i < dic_size; i++) {
+    for (i = characters; i < dic_size; i++) {
       dictionary[i].charactor = NOT_USED;
       dictionary[i].parent_code = -1;
     }
-    return charactors;
+    return characters;
   }
 
   int LZWProcessor::searchWordFromDictionary(Word *dictionary, int charactor, int parent, int size) {
@@ -77,14 +77,14 @@ namespace LZWProcessing {
 
     // Initialization
     int dic_size = 4096;      // Dictionary size
-    int charactors = 256;     // Number of characters
+    int characters = 256;     // Number of characters
     int now_parent = -1;
     int now_dic_size;
     int code;
 
     // Initialize dictionary
     std::vector<Word> dictionary(dic_size);
-    now_dic_size = initDictionary(dictionary.data(), dic_size, charactors);
+    now_dic_size = initDictionary(dictionary.data(), dic_size, characters);
 
     // Compression process
     for (size_t i = 0; i < input.size(); ++i) {

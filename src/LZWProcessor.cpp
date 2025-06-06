@@ -98,7 +98,7 @@ namespace LZWProcessing {
           now_dic_size = addWordToDictionary(dictionary.data(), now_parent, c, now_dic_size);
         } else {
           // If dictionary is full, clear dictionary
-          now_dic_size = initDictionary(dictionary.data(), dic_size, charactors);
+          now_dic_size = initDictionary(dictionary.data(), dic_size, characters);
         }
         now_parent = -1;
         --i; // Re-process current character

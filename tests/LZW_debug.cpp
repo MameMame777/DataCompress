@@ -13,8 +13,8 @@ int main() {
   const std::string filename_lzw   = "_compressed.lzw"; // Replace with your BMP file path
   const std::string filename_decomp= "_lzw_decompressed.bmp"; // Replace with your BMP file path  
 
-  //std::string filename       = "debugdata1_8_grad";         // Replace with your BMP file path
-  std::string filename       = "LENNA";         // Replace with your BMP file path
+  std::string filename       = "debugdata2_8_grad";         // Replace with your BMP file path
+  //std::string filename       = "LENNA";         // Replace with your BMP file path
   
 
   const std::string inputFilePath        = picturepathdebug+filename+filename_bmp; // Replace with your BMP file path

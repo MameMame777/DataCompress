@@ -71,7 +71,13 @@ public:
 private:
     int width;
     int height;
-    std::vector<uint8_t> imageData; 
+    std::vector<uint8_t> imageData;
+    
+    // 内部処理用プライベート関数
+    void compressInternal(const std::vector<uint8_t>& input, std::vector<uint16_t>& output);
+    void decompressInternal(const std::vector<uint16_t>& input, std::vector<uint8_t>& output);
+    void encodeToUint8(const std::vector<uint16_t>& input16, std::vector<uint8_t>& output8);
+    void decodeFromUint8(const std::vector<uint8_t>& input8, std::vector<uint16_t>& output16); 
 
 };
 }

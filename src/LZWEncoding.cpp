@@ -1,0 +1,86 @@
+#include "../include/bmpbase.h"
+#include "../include/Globalconfig.h"
+#include "../include/BmpBaseDataProvider.h"
+#include "../include/LZWProcessor.h"
+#include <iostream>
+#include <vector>
+#include <string>
+namespace LZWProcessing {
+
+  void LZWprocessImage(const std::string& inputFilePath, const std::string& compressedFilePath, const std::string& decompressedFilePath) {
+
+    try {
+      // load the image using BmpBaseDataProvider
+      BmpBase bmpBase;
+      BmpBaseDataProvider provider(inputFilePath);
+      LZWProcessor processor(provider);
+
+      
+      int width = provider.getHeaderData()[18] | (provider.getHeaderData()[19] << 8);
+      int height = provider.getHeaderData()[22] | (provider.getHeaderData()[23] << 8);
+      int bitCount = provider.getHeaderData()[28] | (provider.getHeaderData()[29] << 8);
+      int bytesPerPixel = bitCount / 8; 
+      // the vector to store compressed data
+      std::vector<uint8_t> compressedData;
+      auto headerData = provider.getHeaderData();
+      std::cout << std::dec << std::endl;
+      // compression process
+      std::cout << "Compressing image..." << std::endl;
+      processor.compress(provider.getImageData(), compressedData);
+      std::cout << "Compression completed. Compressed data size: " << compressedData.size() << " bytes" << std::endl;
+      // add header data to compressed data
+      std::cout << "Header data size: " << headerData.size() << " bytes" << std::endl;
+      if (headerData.empty()) {
+        throw std::runtime_error("Header data is empty.");
+      }
+      std::vector<uint8_t> compressedWithHeader = headerData;
+      compressedWithHeader.insert(compressedWithHeader.end(), compressedData.begin(), compressedData.end());
+  
+      // Store Header and compressed data to compressedFile
+      std::ofstream compressedFile(compressedFilePath, std::ios::binary);
+      if (compressedFile) {
+          compressedFile.write(reinterpret_cast<const char*>(compressedWithHeader.data()), compressedWithHeader.size());
+          compressedFile.close();
+          std::cout << "Compressed data with header saved to: " << compressedFilePath << std::endl;
+      }
+  
+      // vector to store decompressed data
+      std::vector<uint8_t> decompressedData;
+  
+      // decompression process
+      std::cout << "Decompressing image..." << std::endl;
+      processor.decompress(compressedData, decompressedData);
+      bmpBase.FlipImage(decompressedData, width, height, bytesPerPixel,GlobalConfig::vertically);
+      std::cout << "Decompression completed. Decompressed data size: " << decompressedData.size() << " bytes" << std::endl;
+  
+      // Save restored data as a new BMP image
+      std::ofstream decompressedFile(decompressedFilePath, std::ios::binary);
+      if (decompressedFile) {
+        // Write the header
+        auto headerData = provider.getHeaderData();
+        decompressedFile.write(reinterpret_cast<const char*>(headerData.data()), headerData.size());
+  
+        // Write the pixel data
+        decompressedFile.write(reinterpret_cast<const char*>(decompressedData.data()), decompressedData.size());
+        decompressedFile.close();
+        std::cout << "Decompressed image saved to: " << decompressedFilePath << std::endl;
+        // Show compression ratio 
+        int originalSize = provider.getHeaderData()[34] | (provider.getHeaderData()[35] << 8) |
+        (provider.getHeaderData()[36] << 16) | (provider.getHeaderData()[37] << 24);
+  
+        // If biSizeImage is 0, calculate using width, height, and bit depth
+        if (originalSize == 0) {
+          originalSize = width * height * bytesPerPixel;
+        }
+        int compressedSize = compressedData.size();
+        double compressionRatio = (static_cast<double>(compressedSize) / originalSize) * 100.0;
+        std::cout << "Original Size: " << originalSize << " bytes" << std::endl;
+        std::cout << "Compressed Size: " << compressedSize << " bytes" << std::endl;
+        std::cout << "Compression Ratio: " << compressionRatio << " %" << std::endl;
+      }
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+}
+
+}
